@@ -8,28 +8,28 @@ datasource db {
 }
 
 model User {
-  id                      String              @id @default(uuid())
-  name                    String
-  email                   String              @unique
-  password                String?
-  avatar                  String?
-  provider                String              @default("local")
-  googleId                String?
-  role                    Role                @default(user)
-  status                  Status              @default(active)
-  isVerified              Boolean             @default(false)
-  otp                     String?
-  otpExpires              DateTime?
-  pushToken               String?
-  points                  Int                 @default(50)
+  id                       String              @id @default(uuid())
+  name                     String
+  email                    String              @unique
+  password                 String?
+  avatar                   String?
+  provider                 String              @default("local")
+  googleId                 String?
+  role                     Role                @default(user)
+  status                   Status              @default(active)
+  isVerified               Boolean             @default(false)
+  otp                      String?
+  otpExpires               DateTime?
+  pushToken                String?
+  points                   Int                 @default(50)
   lastLoginRewardClaimedAt DateTime?
   lastTxRewardClaimedAt    DateTime?
-  createdAt               DateTime            @default(now())
-  updatedAt               DateTime            @updatedAt
-  transactions            Transaction[]
-  dues                    Due[]
-  goals                   Goal[]
-  investments             InvestmentProject[]
+  createdAt                DateTime            @default(now())
+  updatedAt                DateTime            @updatedAt
+  dues                     Due[]
+  goals                    Goal[]
+  investments              InvestmentProject[]
+  transactions             Transaction[]
 }
 
 model Transaction {
@@ -37,13 +37,12 @@ model Transaction {
   userId    String?
   title     String
   amount    Float
-  type      String   
-  category  String  
-  date      String  
+  type      String
+  category  String
+  date      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Due {
@@ -52,40 +51,37 @@ model Due {
   personName String
   phone      String?
   amount     Float
-  type       String   // 'receivable' | 'payable'
+  type       String
   note       String?
   dueDate    String?
   isSettled  Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Goal {
-  id            String   @id @default(uuid())
+  id            String  @id @default(uuid())
   userId        String
   name          String
   targetAmount  Float
   description   String?
-  isCompleted   Boolean  @default(false)
+  isCompleted   Boolean @default(false)
   pointsAwarded Int
   createdAt     String
-  history       Json     @default("[]")
-  
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  history       Json    @default("[]")
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model InvestmentProject {
-  id           String   @id @default(uuid())
+  id           String  @id @default(uuid())
   userId       String
   name         String
   targetBudget Float?
   description  String?
   createdAt    String
-  logs         Json     @default("[]")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logs         Json    @default("[]")
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Status {
