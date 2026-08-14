@@ -22,7 +22,7 @@ const getAllDues = async (userId?: string) => {
 };
 
 const toggleSettleDue = async (id: string, userId?: string) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(id)) {
     throw new AppError("Invalid Due ID format", 400);
   }
 
@@ -48,7 +48,7 @@ const toggleSettleDue = async (id: string, userId?: string) => {
 };
 
 const deleteDue = async (id: string, userId?: string) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(id)) {
     throw new AppError("Invalid Due ID format", 400);
   }
 
@@ -70,7 +70,7 @@ const deleteDue = async (id: string, userId?: string) => {
 };
 
 const updateDue = async (id: string, userId: string | undefined, payload: Partial<ICreateDue>) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(id)) {
     throw new AppError("Invalid Due ID format", 400);
   }
 

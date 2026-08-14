@@ -3,29 +3,29 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id                      String        @id @default(auto()) @map("_id") @db.ObjectId
+  id                      String              @id @default(uuid())
   name                    String
-  email                   String        @unique
+  email                   String              @unique
   password                String?
   avatar                  String?
-  provider                String        @default("local")
+  provider                String              @default("local")
   googleId                String?
-  role                    Role          @default(user)
-  status                  Status        @default(active)
-  isVerified              Boolean       @default(false)
+  role                    Role                @default(user)
+  status                  Status              @default(active)
+  isVerified              Boolean             @default(false)
   otp                     String?
   otpExpires              DateTime?
   pushToken               String?
-  points                  Int           @default(50)
+  points                  Int                 @default(50)
   lastLoginRewardClaimedAt DateTime?
   lastTxRewardClaimedAt    DateTime?
-  createdAt               DateTime      @default(now())
-  updatedAt               DateTime      @updatedAt
+  createdAt               DateTime            @default(now())
+  updatedAt               DateTime            @updatedAt
   transactions            Transaction[]
   dues                    Due[]
   goals                   Goal[]
@@ -33,8 +33,8 @@ model User {
 }
 
 model Transaction {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String?  @db.ObjectId
+  id        String   @id @default(uuid())
+  userId    String?
   title     String
   amount    Float
   type      String   
@@ -47,8 +47,8 @@ model Transaction {
 }
 
 model Due {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String?  @db.ObjectId
+  id         String   @id @default(uuid())
+  userId     String?
   personName String
   phone      String?
   amount     Float
@@ -63,43 +63,29 @@ model Due {
 }
 
 model Goal {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId        String   @db.ObjectId
+  id            String   @id @default(uuid())
+  userId        String
   name          String
   targetAmount  Float
   description   String?
   isCompleted   Boolean  @default(false)
   pointsAwarded Int
   createdAt     String
-  history       SavingsLog[]
+  history       Json     @default("[]")
   
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-type SavingsLog {
-  id     String
-  amount Float
-  date   String
-  note   String?
-}
-
 model InvestmentProject {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId       String   @db.ObjectId
+  id           String   @id @default(uuid())
+  userId       String
   name         String
   targetBudget Float?
   description  String?
   createdAt    String
-  logs         InvestmentLog[]
+  logs         Json     @default("[]")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-type InvestmentLog {
-  id     String
-  title  String
-  amount Float
-  date   String
 }
 
 enum Status {

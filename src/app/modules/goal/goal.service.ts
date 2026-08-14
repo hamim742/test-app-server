@@ -22,7 +22,7 @@ const getAllGoals = async (userId: string) => {
 };
 
 const updateGoal = async (id: string, userId: string, payload: IUpdateGoal) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(id)) {
     throw new AppError("Invalid Goal ID format", 400);
   }
 
@@ -53,7 +53,7 @@ const updateGoal = async (id: string, userId: string, payload: IUpdateGoal) => {
 };
 
 const deleteGoal = async (id: string, userId: string) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(id)) {
     throw new AppError("Invalid Goal ID format", 400);
   }
 
@@ -72,7 +72,7 @@ const deleteGoal = async (id: string, userId: string) => {
 };
 
 const addSavings = async (goalId: string, userId: string, log: ISavingsLog) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(goalId)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(goalId)) {
     throw new AppError("Invalid Goal ID format", 400);
   }
 
@@ -84,14 +84,14 @@ const addSavings = async (goalId: string, userId: string, log: ISavingsLog) => {
     throw new AppError("Goal not found", 404);
   }
 
-  const updatedHistory = [...existing.history, log];
+  const updatedHistory = [...(existing.history as unknown as ISavingsLog[]), log];
   const totalSavings = updatedHistory.reduce((sum, item) => sum + item.amount, 0);
   const shouldMarkCompleted = totalSavings >= existing.targetAmount;
 
   const updated = await prisma.goal.update({
     where: { id: goalId },
     data: {
-      history: updatedHistory,
+      history: updatedHistory as any,
       ...(shouldMarkCompleted && !existing.isCompleted ? { isCompleted: true } : {}),
     },
     include: { user: true },
@@ -110,7 +110,7 @@ const addSavings = async (goalId: string, userId: string, log: ISavingsLog) => {
 };
 
 const deleteSavings = async (goalId: string, userId: string, savingsLogId: string) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(goalId)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(goalId)) {
     throw new AppError("Invalid Goal ID format", 400);
   }
 
@@ -122,12 +122,12 @@ const deleteSavings = async (goalId: string, userId: string, savingsLogId: strin
     throw new AppError("Goal not found", 404);
   }
 
-  const updatedHistory = existing.history.filter((item) => item.id !== savingsLogId);
+  const updatedHistory = (existing.history as unknown as ISavingsLog[]).filter((item) => item.id !== savingsLogId);
 
   const updated = await prisma.goal.update({
     where: { id: goalId },
     data: {
-      history: updatedHistory,
+      history: updatedHistory as any,
     },
   });
   return updated;
@@ -139,7 +139,7 @@ const updateSavings = async (
   savingsLogId: string,
   payload: Omit<ISavingsLog, "id">
 ) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(goalId)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(goalId)) {
     throw new AppError("Invalid Goal ID format", 400);
   }
 
@@ -151,7 +151,7 @@ const updateSavings = async (
     throw new AppError("Goal not found", 404);
   }
 
-  const updatedHistory = existing.history.map((item) => {
+  const updatedHistory = (existing.history as unknown as ISavingsLog[]).map((item) => {
     if (item.id === savingsLogId) {
       return {
         ...item,
@@ -164,7 +164,7 @@ const updateSavings = async (
   const updated = await prisma.goal.update({
     where: { id: goalId },
     data: {
-      history: updatedHistory,
+      history: updatedHistory as any,
     },
   });
   return updated;

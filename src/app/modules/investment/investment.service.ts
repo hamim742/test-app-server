@@ -21,7 +21,7 @@ const getAllInvestments = async (userId: string) => {
 };
 
 const updateInvestment = async (id: string, userId: string, payload: IUpdateInvestment) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(id)) {
     throw new AppError("Invalid Investment ID format", 400);
   }
 
@@ -41,7 +41,7 @@ const updateInvestment = async (id: string, userId: string, payload: IUpdateInve
 };
 
 const deleteInvestment = async (id: string, userId: string) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(id)) {
     throw new AppError("Invalid Investment ID format", 400);
   }
 
@@ -60,7 +60,7 @@ const deleteInvestment = async (id: string, userId: string) => {
 };
 
 const addLog = async (investmentId: string, userId: string, log: IInvestmentLog) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(investmentId)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(investmentId)) {
     throw new AppError("Invalid Investment ID format", 400);
   }
 
@@ -72,19 +72,19 @@ const addLog = async (investmentId: string, userId: string, log: IInvestmentLog)
     throw new AppError("Investment not found", 404);
   }
 
-  const updatedLogs = [...existing.logs, log];
+  const updatedLogs = [...(existing.logs as unknown as IInvestmentLog[]), log];
 
   const updated = await prisma.investmentProject.update({
     where: { id: investmentId },
     data: {
-      logs: updatedLogs,
+      logs: updatedLogs as any,
     },
   });
   return updated;
 };
 
 const deleteLog = async (investmentId: string, userId: string, logId: string) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(investmentId)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(investmentId)) {
     throw new AppError("Invalid Investment ID format", 400);
   }
 
@@ -96,12 +96,12 @@ const deleteLog = async (investmentId: string, userId: string, logId: string) =>
     throw new AppError("Investment not found", 404);
   }
 
-  const updatedLogs = existing.logs.filter((item) => item.id !== logId);
+  const updatedLogs = (existing.logs as unknown as IInvestmentLog[]).filter((item) => item.id !== logId);
 
   const updated = await prisma.investmentProject.update({
     where: { id: investmentId },
     data: {
-      logs: updatedLogs,
+      logs: updatedLogs as any,
     },
   });
   return updated;
@@ -113,7 +113,7 @@ const updateLog = async (
   logId: string,
   payload: Omit<IInvestmentLog, "id">
 ) => {
-  if (!/^[0-9a-fA-F]{24}$/.test(investmentId)) {
+  if (!/^[0-9a-fA-F-]{24,36}$/.test(investmentId)) {
     throw new AppError("Invalid Investment ID format", 400);
   }
 
@@ -125,7 +125,7 @@ const updateLog = async (
     throw new AppError("Investment not found", 404);
   }
 
-  const updatedLogs = existing.logs.map((item) => {
+  const updatedLogs = (existing.logs as unknown as IInvestmentLog[]).map((item) => {
     if (item.id === logId) {
       return {
         ...item,
@@ -138,7 +138,7 @@ const updateLog = async (
   const updated = await prisma.investmentProject.update({
     where: { id: investmentId },
     data: {
-      logs: updatedLogs,
+      logs: updatedLogs as any,
     },
   });
   return updated;
