@@ -4,4 +4,5 @@ export interface ICreateTransaction {
   type: "income" | "expense";
   category: "Food" | "Shopping" | "Utilities" | "Rent" | "Entertainment" | "Salary" | "Others";
   date: string;
+  createdAt?: string | Date;
 }

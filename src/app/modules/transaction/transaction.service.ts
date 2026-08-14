@@ -42,6 +42,7 @@ const createTransaction = async (userId: string | undefined, payload: ICreateTra
     data: {
       ...payload,
       userId: userId || null,
+      createdAt: payload.createdAt ? new Date(payload.createdAt) : undefined,
     },
   });
   return transaction;
@@ -103,7 +104,10 @@ const updateTransaction = async (id: string, userId: string | undefined, payload
 
   const updated = await prisma.transaction.update({
     where: { id },
-    data: payload,
+    data: {
+      ...payload,
+      createdAt: payload.createdAt ? new Date(payload.createdAt) : undefined,
+    },
   });
 
   return updated;
