@@ -4,7 +4,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { TransactionService } from "./transaction.service";
 
 const createTransaction = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user?.id;
+  const userId = req.user!.id; // auth middleware guarantees req.user exists
   const result = await TransactionService.createTransaction(userId, req.body);
 
   sendResponse(res, {

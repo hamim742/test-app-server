@@ -275,7 +275,17 @@ const claimDailyTxReward = async (userId: string) => {
   return updatedUser;
 };
 
+const MAX_POINTS_PER_CALL = 100; // Maximum points allowed in a single addPoints request
+
 const addPointsSecure = async (userId: string, amount: number) => {
+  // Security: validate amount range to prevent abuse/cheating
+  if (!Number.isInteger(amount) || amount <= 0 || amount > MAX_POINTS_PER_CALL) {
+    throw new AppError(
+      `Invalid points amount. Must be a whole number between 1 and ${MAX_POINTS_PER_CALL}.`,
+      400
+    );
+  }
+
   const user = await prisma.user.findUnique({
     where: { id: userId },
   });
@@ -317,10 +327,10 @@ const getLeaderboard = async () => {
     },
   });
 
-  // If the database has fewer than 5 registered users,
-  // fill the gap with competitive mock profiles to make the leaderboard look active.
+  // Only fill with mock users when explicitly enabled via env (e.g., for dev/staging demos)
+  const SHOW_MOCK_LEADERBOARD = process.env.SHOW_MOCK_LEADERBOARD === "true";
   const TARGET_SIZE = 5;
-  if (leaderboard.length < TARGET_SIZE) {
+  if (SHOW_MOCK_LEADERBOARD && leaderboard.length < TARGET_SIZE) {
     const allMockUsers = [
       { id: "mock_1", name: "তানভীর হাসান", points: 430, avatar: null },
       { id: "mock_2", name: "সাকিব রহমান", points: 340, avatar: null },
@@ -328,7 +338,6 @@ const getLeaderboard = async () => {
       { id: "mock_4", name: "আরিফ হোসেন", points: 90, avatar: null },
       { id: "mock_5", name: "হামিম আহমেদ", points: 580, avatar: null },
     ];
-    // Only add as many mock users as needed to reach the target size
     const needed = TARGET_SIZE - leaderboard.length;
     const mockToAdd = allMockUsers.slice(0, needed);
     leaderboard = [...leaderboard, ...mockToAdd];

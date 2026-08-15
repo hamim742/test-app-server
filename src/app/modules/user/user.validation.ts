@@ -15,7 +15,18 @@ const updateUserStatusValidationSchema = z.object({
   }),
 });
 
+const addPointsValidationSchema = z.object({
+  body: z.object({
+    amount: z
+      .number({ required_error: "Amount is required", invalid_type_error: "Amount must be a number" })
+      .int("Amount must be a whole number")
+      .positive("Amount must be positive")
+      .max(100, "Maximum 100 points allowed per request"),
+  }),
+});
+
 export const UserValidation = {
   updateProfileValidationSchema,
   updateUserStatusValidationSchema,
+  addPointsValidationSchema,
 };

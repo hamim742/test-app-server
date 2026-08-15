@@ -17,18 +17,21 @@ const allowedOrigins = [
   "http://localhost:3000",
 ];
 
+const isDevMode = process.env.NODE_ENV !== "production";
+
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
+      if (!origin) return callback(null, true); // Allow mobile apps with no origin
 
       const isAllowed =
         allowedOrigins.includes(origin) ||
         origin.endsWith(".vercel.app") ||
-        (process.env.NODE_ENV !== "production" &&
-          (origin.includes(".ngrok-free.dev") ||
-            origin.startsWith("http://10.") ||
-            origin.startsWith("http://192.168.")));
+        (isDevMode && (
+          origin.includes(".ngrok-free.dev") ||
+          origin.startsWith("http://10.") ||
+          origin.startsWith("http://192.168.")
+        ));
 
       if (isAllowed) {
         callback(null, true);

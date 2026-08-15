@@ -37,11 +37,11 @@ const SEED_TRANSACTIONS = [
   { title: "Gadget Purchase (গ্যাজেট)", amount: 8500, type: "expense", category: "Shopping", date: "2026-04-28" },
 ];
 
-const createTransaction = async (userId: string | undefined, payload: ICreateTransaction) => {
+const createTransaction = async (userId: string, payload: ICreateTransaction) => {
   const transaction = await prisma.transaction.create({
     data: {
       ...payload,
-      userId: userId || null,
+      userId,
       createdAt: payload.createdAt ? new Date(payload.createdAt) : undefined,
     },
   });
