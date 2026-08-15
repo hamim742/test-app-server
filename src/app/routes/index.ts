@@ -6,6 +6,7 @@ import { dueRoutes } from "../modules/due/due.routes";
 import { NotificationRoutes } from "../modules/notification/notification.route";
 import { goalRoutes } from "../modules/goal/goal.routes";
 import { investmentRoutes } from "../modules/investment/investment.routes";
+import { recurringRoutes } from "../modules/recurring/recurring.routes";
 
 export const router = Router();
 
@@ -37,6 +38,10 @@ const moduleRoutes: Array<{ path: string; route: Router }> = [
   {
     path: "/investments",
     route: investmentRoutes,
+  },
+  {
+    path: "/recurring",
+    route: recurringRoutes,
   },
 ];
 
