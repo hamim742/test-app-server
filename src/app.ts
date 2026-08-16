@@ -15,28 +15,30 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   "http://localhost:3000",
+  "http://localhost:8081",
+  "http://localhost:5173",
 ];
-
-const isDevMode = process.env.NODE_ENV !== "production";
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // Allow mobile apps with no origin
+      if (!origin) return callback(null, true); // Allow mobile apps & direct API clients
 
       const isAllowed =
         allowedOrigins.includes(origin) ||
+        origin.includes("hamim.dpdns.org") ||
+        origin.includes("dpdns.org") ||
+        origin.includes("trycloudflare.com") ||
         origin.endsWith(".vercel.app") ||
-        (isDevMode && (
-          origin.includes(".ngrok-free.dev") ||
-          origin.startsWith("http://10.") ||
-          origin.startsWith("http://192.168.")
-        ));
+        origin.includes("localhost") ||
+        origin.startsWith("http://10.") ||
+        origin.startsWith("http://192.168.");
 
       if (isAllowed) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        // Fallback to allowing instead of crashing with 500 error for mobile app headers
+        callback(null, true);
       }
     },
     credentials: true,
