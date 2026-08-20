@@ -6,8 +6,8 @@ export const sendOTPEmail = async (to: string, otp: string, name?: string) => {
   console.log(`🔑 [OTP GENERATED] Email: ${to} | OTP Code: ${otp}`);
   console.log(`==================================================\n`);
 
-  // Get template subject and html from templates module
-  const { subject, html } = getOTPEmailTemplate({ otp, name });
+  // Get template subject, html, and text from templates module
+  const { subject, html, text } = getOTPEmailTemplate({ otp, name });
 
   // If SMTP environment variables are set in .env, send real email via SMTP
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
@@ -23,10 +23,16 @@ export const sendOTPEmail = async (to: string, otp: string, name?: string) => {
       });
 
       await transporter.sendMail({
-        from: process.env.SMTP_FROM || '"হিসাব কিতাব" <noreply@hisabkitab.com>',
+        from: process.env.SMTP_FROM || `"হিসাব কিতাব" <${process.env.SMTP_USER}>`,
         to,
         subject,
+        text,
         html,
+        headers: {
+          "X-Priority": "1",
+          "X-MSMail-Priority": "High",
+          Importance: "high",
+        },
       });
       console.log(`✅ [EMAIL SENT] OTP successfully mailed to ${to}`);
     } catch (error) {
@@ -40,7 +46,7 @@ export const sendResetSuccessEmail = async (to: string, name?: string) => {
   console.log(`🔒 [PASSWORD RESET SUCCESS] Email: ${to}`);
   console.log(`==================================================\n`);
 
-  const { subject, html } = getResetSuccessEmailTemplate({ name });
+  const { subject, html, text } = getResetSuccessEmailTemplate({ name });
 
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     try {
@@ -55,9 +61,10 @@ export const sendResetSuccessEmail = async (to: string, name?: string) => {
       });
 
       await transporter.sendMail({
-        from: process.env.SMTP_FROM || '"হিসাব কিতাব" <noreply@hisabkitab.com>',
+        from: process.env.SMTP_FROM || `"হিসাব কিতাব" <${process.env.SMTP_USER}>`,
         to,
         subject,
+        text,
         html,
       });
       console.log(`✅ [EMAIL SENT] Password reset confirmation mailed to ${to}`);
@@ -72,7 +79,7 @@ export const sendWelcomeEmail = async (to: string, name?: string) => {
   console.log(`✨ [WELCOME EMAIL] Email: ${to} | Name: ${name}`);
   console.log(`==================================================\n`);
 
-  const { subject, html } = getWelcomeEmailTemplate({ name });
+  const { subject, html, text } = getWelcomeEmailTemplate({ name });
 
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     try {
@@ -87,9 +94,10 @@ export const sendWelcomeEmail = async (to: string, name?: string) => {
       });
 
       await transporter.sendMail({
-        from: process.env.SMTP_FROM || '"হিসাব কিতাব" <noreply@hisabkitab.com>',
+        from: process.env.SMTP_FROM || `"হিসাব কিতাব" <${process.env.SMTP_USER}>`,
         to,
         subject,
+        text,
         html,
       });
       console.log(`✅ [EMAIL SENT] Welcome email successfully mailed to ${to}`);
@@ -104,7 +112,7 @@ export const sendGoalSuccessEmail = async (to: string, params: Omit<IGoalSuccess
   console.log(`🏆 [GOAL ACCOMPLISHED EMAIL] Email: ${to} | Goal: ${params.goalName}`);
   console.log(`==================================================\n`);
 
-  const { subject, html } = getGoalSuccessEmailTemplate(params);
+  const { subject, html, text } = getGoalSuccessEmailTemplate(params);
 
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     try {
@@ -119,9 +127,10 @@ export const sendGoalSuccessEmail = async (to: string, params: Omit<IGoalSuccess
       });
 
       await transporter.sendMail({
-        from: process.env.SMTP_FROM || '"হিসাব কিতাব" <noreply@hisabkitab.com>',
+        from: process.env.SMTP_FROM || `"হিসাব কিতাব" <${process.env.SMTP_USER}>`,
         to,
         subject,
+        text,
         html,
       });
       console.log(`✅ [EMAIL SENT] Goal success congratulations mailed to ${to}`);
@@ -136,7 +145,7 @@ export const sendFinancialReportEmail = async (to: string, params: Omit<IFinanci
   console.log(`📊 [FINANCIAL REPORT EMAIL] Email: ${to}`);
   console.log(`==================================================\n`);
 
-  const { subject, html } = getFinancialReportEmailTemplate(params);
+  const { subject, html, text } = getFinancialReportEmailTemplate(params);
 
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     try {
@@ -151,9 +160,10 @@ export const sendFinancialReportEmail = async (to: string, params: Omit<IFinanci
       });
 
       await transporter.sendMail({
-        from: process.env.SMTP_FROM || '"হিসাব কিতাব" <noreply@hisabkitab.com>',
+        from: process.env.SMTP_FROM || `"হিসাব কিতাব" <${process.env.SMTP_USER}>`,
         to,
         subject,
+        text,
         html,
       });
       console.log(`✅ [EMAIL SENT] Financial report successfully mailed to ${to}`);

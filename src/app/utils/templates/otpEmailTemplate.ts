@@ -10,7 +10,7 @@ export const getOTPEmailTemplate = ({
   name = "ইউজার",
   appName = "হিসাব কিতাব",
   validMinutes = 10,
-}: IOTPEmailTemplateParams): { subject: string; html: string } => {
+}: IOTPEmailTemplateParams): { subject: string; html: string; text: string } => {
   const subject = `${appName} - আপনার ওটিপি ভেরিফিকেশন কোড`;
 
   const html = `
@@ -82,5 +82,17 @@ export const getOTPEmailTemplate = ({
 </html>
   `;
 
-  return { subject, html };
+  const text = `প্রিয় ${name},
+
+${appName}-এ আপনাকে স্বাগতম! আপনার অ্যাকাউন্ট ভেরিফিকেশন সম্পূর্ণ করতে নিচের ৬ ডিজিটের ওটিপি (OTP) কোডটি ব্যবহার করুন:
+
+ভেরিফিকেশন কোড: ${otp}
+
+এই কোডটি আগামী ${validMinutes} মিনিট পর্যন্ত কার্যকর থাকবে। নিরাপত্তার জন্য এটি কারো সাথে শেয়ার করবেন না।
+
+ধন্যবাদ,
+${appName} টিম
+support@hisabkitab.com`;
+
+  return { subject, html, text };
 };

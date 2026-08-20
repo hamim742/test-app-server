@@ -34,7 +34,7 @@ export const getFinancialReportEmailTemplate = ({
   categoryBreakdown,
   recentTransactions,
   appName = "হিসাব কিতাব",
-}: IFinancialReportTemplateParams): { subject: string; html: string } => {
+}: IFinancialReportTemplateParams): { subject: string; html: string; text: string } => {
   const subject = `${appName} - আপনার সাপ্তাহিক আর্থিক রিপোর্ট (${startDate} থেকে ${endDate})`;
 
   const html = `
@@ -161,5 +161,16 @@ export const getFinancialReportEmailTemplate = ({
 </html>
   `;
 
-  return { subject, html };
+  const text = `প্রিয় ${userName},
+
+${appName} - সাপ্তাহিক আর্থিক রিপোর্ট (${startDate} থেকে ${endDate})
+
+- মোট আয়: ৳${totalIncome}
+- মোট ব্যয়: ৳${totalExpense}
+- ব্যালেন্স পরিবর্তন: ${balanceChange >= 0 ? '+' : ''}৳${balanceChange}
+
+ধন্যবাদ,
+${appName} টিম`;
+
+  return { subject, html, text };
 };

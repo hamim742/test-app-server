@@ -12,7 +12,7 @@ export const getGoalSuccessEmailTemplate = ({
   pointsAwarded,
   name = "ইউজার",
   appName = "হিসাব কিতাব",
-}: IGoalSuccessTemplateParams): { subject: string; html: string } => {
+}: IGoalSuccessTemplateParams): { subject: string; html: string; text: string } => {
   const subject = `অভিনন্দন ${name}! আপনি আপনার লক্ষ্য "${goalName}" অর্জন করেছেন 🎉`;
 
   const html = `
@@ -85,5 +85,14 @@ export const getGoalSuccessEmailTemplate = ({
 </html>
   `;
 
-  return { subject, html };
+  const text = `প্রিয় ${name},
+
+অভিনন্দন! আপনি আপনার লক্ষ্য "${goalName}" সফলভাবে অর্জন করেছেন!
+সঞ্চয়ের পরিমাণ: ৳${targetAmount}
+অর্জিত পয়েন্ট: +${pointsAwarded} XP
+
+ধন্যবাদ,
+${appName} টিম`;
+
+  return { subject, html, text };
 };

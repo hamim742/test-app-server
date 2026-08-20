@@ -8,7 +8,7 @@ export const getResetPasswordEmailTemplate = ({
   resetLink = "#",
   name = "ইউজার",
   appName = "হিসাব কিতাব",
-}: IResetPasswordTemplateParams): { subject: string; html: string } => {
+}: IResetPasswordTemplateParams): { subject: string; html: string; text: string } => {
   const subject = `${appName} - পাসওয়ার্ড পুনর্নির্ধারণ লিংক`;
 
   const html = `
@@ -67,7 +67,17 @@ export const getResetPasswordEmailTemplate = ({
 </html>
   `;
 
-  return { subject, html };
+  const text = `প্রিয় ${name},
+
+আপনার অ্যাকাউন্টের পাসওয়ার্ড পুনর্নির্ধারণের জন্য অনুরোধ পাওয়া গেছে।
+পাসওয়ার্ড রিসেট লিংক: ${resetLink}
+
+আপনি যদি এই পাসওয়ার্ড রিসেটের অনুরোধ না করে থাকেন, তবে এটি উপেক্ষা করতে পারেন।
+
+ধন্যবাদ,
+${appName} টিম`;
+
+  return { subject, html, text };
 };
 
 export interface IResetSuccessTemplateParams {
@@ -78,7 +88,7 @@ export interface IResetSuccessTemplateParams {
 export const getResetSuccessEmailTemplate = ({
   name = "ইউজার",
   appName = "হিসাব কিতাব",
-}: IResetSuccessTemplateParams): { subject: string; html: string } => {
+}: IResetSuccessTemplateParams): { subject: string; html: string; text: string } => {
   const subject = `${appName} - পাসওয়ার্ড পরিবর্তন সফল হয়েছে`;
 
   const html = `
@@ -132,5 +142,14 @@ export const getResetSuccessEmailTemplate = ({
 </html>
   `;
 
-  return { subject, html };
+  const text = `প্রিয় ${name},
+
+আপনার অ্যাকাউন্টের পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে।
+
+নিরাপত্তা নোটিশ: আপনি যদি এই পরিবর্তনটি নিজে না করে থাকেন, তবে অবিলম্বে আপনার অ্যাকাউন্ট সুরক্ষিত করতে পদক্ষেপ নিন।
+
+ধন্যবাদ,
+${appName} টিম`;
+
+  return { subject, html, text };
 };

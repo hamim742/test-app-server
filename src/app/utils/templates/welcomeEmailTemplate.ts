@@ -6,7 +6,7 @@ export interface IWelcomeEmailTemplateParams {
 export const getWelcomeEmailTemplate = ({
   name = "ইউজার",
   appName = "হিসাব কিতাব",
-}: IWelcomeEmailTemplateParams): { subject: string; html: string } => {
+}: IWelcomeEmailTemplateParams): { subject: string; html: string; text: string } => {
   const subject = `স্বাগতম ${name}! ${appName} অ্যাপে আপনার যাত্রা শুরু হোক`;
 
   const html = `
@@ -81,5 +81,18 @@ export const getWelcomeEmailTemplate = ({
 </html>
   `;
 
-  return { subject, html };
+  const text = `প্রিয় ${name},
+
+${appName}-এ স্বাগতম!
+আপনার দৈনিক আয় ও ব্যয়ের হিসাব সহজ এবং ডিজিটাল উপায়ে ট্র্যাক করার জন্য ${appName} অ্যাপে যুক্ত হওয়ার জন্য আন্তরিক ধন্যবাদ।
+
+ফিচারসমূহ:
+- আয়-ব্যয় ট্র্যাকিং
+- ডেইলি রিওয়ার্ড পয়েন্ট
+- আর্থিক লক্ষ্য (Goals) ট্র্যাকিং
+
+ধন্যবাদ,
+${appName} টিম`;
+
+  return { subject, html, text };
 };
