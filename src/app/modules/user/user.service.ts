@@ -1,7 +1,7 @@
 import { AppError } from "../../error/AppError";
 import { prisma } from "../../lib/prisma";
 import { IUpdateProfile, IUpdateUserStatus } from "./user.interface";
-import { sendFinancialReportEmail } from "../../utils/sendEmail";
+import { sendFinancialReportEmail, sendUserFeedbackEmail, IUserFeedbackParams } from "../../utils/sendEmail";
 
 const getBangladeshDateString = (date: Date = new Date()): string => {
   const bstDate = new Date(date.getTime() + 6 * 60 * 60 * 1000);
@@ -425,6 +425,13 @@ const sendFinancialReport = async (userId: string) => {
   };
 };
 
+const submitUserFeedback = async (payload: IUserFeedbackParams) => {
+  if (!payload.message || !payload.message.trim()) {
+    throw new AppError("Feedback message is required", 400);
+  }
+  return await sendUserFeedbackEmail(payload);
+};
+
 export const UserService = {
   getMe,
   updateMe,
@@ -437,4 +444,5 @@ export const UserService = {
   addPointsSecure,
   getLeaderboard,
   sendFinancialReport,
+  submitUserFeedback,
 };

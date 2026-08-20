@@ -142,6 +142,26 @@ const sendFinancialReport = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const submitFeedback = catchAsync(async (req: Request, res: Response) => {
+  const { category, message, name, email, phone } = req.body;
+  const user = req.user;
+
+  const result = await UserService.submitUserFeedback({
+    category: category || "feature",
+    message,
+    userName: name || user?.name || "ব্যবহারকারী",
+    userEmail: email || user?.email,
+    userPhone: phone || user?.phone,
+  });
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "ফিডব্যাক সফলভাবে গ্রহণ করা হয়েছে ও ডেভেলপারকে পাঠানো হয়েছে।",
+    data: result,
+  });
+});
+
 export const UserController = {
   getMe,
   updateMe,
@@ -154,4 +174,5 @@ export const UserController = {
   addPoints,
   getLeaderboard,
   sendFinancialReport,
+  submitFeedback,
 };

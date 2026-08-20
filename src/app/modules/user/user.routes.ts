@@ -1,10 +1,12 @@
 import { Router } from "express";
-import { auth } from "../../middleware/auth";
+import { auth, optionalAuth } from "../../middleware/auth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { UserController } from "./user.controller";
 import { UserValidation } from "./user.validation";
 
 const router = Router();
+
+router.post("/feedback", optionalAuth, UserController.submitFeedback);
 
 router.get("/me", auth("user", "admin"), UserController.getMe);
 

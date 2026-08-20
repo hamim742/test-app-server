@@ -46,3 +46,21 @@ export const auth = (...requiredRoles: string[]) => {
     }
   };
 };
+
+export const optionalAuth = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const token =
+      req.headers.authorization?.split(" ")[1] || req.cookies?.accessToken;
+
+    if (token) {
+      const decoded = jwt.verify(
+        token,
+        config.jwt.secret as Secret
+      ) as JwtPayload & { id: string; email: string; role: string };
+      req.user = decoded;
+    }
+  } catch (err) {
+    // Ignore invalid/expired token for optional auth
+  }
+  next();
+};
