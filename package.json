@@ -4,10 +4,10 @@
   "description": "Express + Prisma + MongoDB modern backend boilerplate.",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules src/server.ts",
-    "build": "prisma generate && tsc",
+    "dev": "node init && ts-node-dev --respawn --transpile-only --ignore-watch node_modules src/server.ts",
+    "build": "node init && prisma generate && tsc",
     "postinstall": "prisma generate",
-    "start": "node dist/server.js",
+    "start": "node init && node dist/server.js",
     "docker:build": "docker build -t hisabkitab-server .",
     "docker:run": "docker run -d -p 5042:5042 --env-file .env --name hisabkitab-server hisabkitab-server",
     "docker:compose": "docker compose up -d --build"
@@ -34,6 +34,7 @@
     "google-auth-library": "^10.9.1",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^3.3.2",
     "nodemailer": "^9.0.3",
     "zod": "^3.23.8"
   },

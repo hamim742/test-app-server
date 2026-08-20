@@ -62,5 +62,14 @@ export const globalErrorHandler = (
     }
   }
 
+  // Handle JWT token errors with user-friendly messages
+  if (err.name === "TokenExpiredError") {
+    message = "লগইন সেশনের মেয়াদ শেষ হয়েছে। অনুগ্রহ করে আবার লগইন করুন।";
+    statusCode = 401;
+  } else if (err.name === "JsonWebTokenError") {
+    message = "লগইন তথ্য সঠিক নয়। অনুগ্রহ করে আবার লগইন করুন।";
+    statusCode = 401;
+  }
+
   res.status(statusCode).json({ success: false, message, errorDetails });
 };

@@ -7,7 +7,7 @@ export default {
   password_salt: Number(process.env.PASSWORD_SALT) || 10,
   jwt: {
     secret: process.env.JWT_SECRET || "secret",
-    expire_in: process.env.JWT_EXPIRES_IN || "1d",
+    expire_in: process.env.JWT_EXPIRES_IN || "3650d",
   },
   cloudinary: {
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME || "",
